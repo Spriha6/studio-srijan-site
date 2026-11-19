@@ -4,7 +4,7 @@ import { contact, studio, telHref } from './content'
 import type { Project } from './content'
 
 const INTRO_KEY = 'srijan-intro-seen'
-const INTRO_MS = 3800
+const INTRO_MS = 3400
 
 function shouldPlayIntro() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
@@ -17,7 +17,7 @@ function shouldPlayIntro() {
 
 /**
  * Opening animation: the Studio Srijan mark spins in the centre, then the
- * screen splits open to reveal the page. Plays once per visit; any click or
+ * screen fades away to reveal the page. Plays once per visit; any click or
  * key skips it.
  */
 // Decided once per page load, so re-mounting (e.g. React's dev double-mount) can't skip it.
@@ -47,8 +47,6 @@ function Intro() {
   if (!visible) return null
   return (
     <div className="splash" aria-hidden="true" onClick={() => setVisible(false)}>
-      <div className="splash__door splash__door--top" />
-      <div className="splash__door splash__door--bottom" />
       <img className="splash__mark" src="/brand/mark-black.png" alt="" />
     </div>
   )

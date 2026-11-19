@@ -229,27 +229,9 @@ textarea {
   z-index: 200;
   display: grid;
   place-items: center;
-  cursor: pointer;
-}
-
-/* Two halves of the screen that slide apart to reveal the page. */
-.splash__door {
-  position: absolute;
-  right: 0;
-  left: 0;
-  height: 50.5%;
   background: var(--paper);
-  animation: splash-door 1.1s cubic-bezier(0.76, 0, 0.24, 1) 2.6s forwards;
-}
-
-.splash__door--top {
-  top: 0;
-  --door-to: -100%;
-}
-
-.splash__door--bottom {
-  bottom: 0;
-  --door-to: 100%;
+  cursor: pointer;
+  animation: splash-fade 0.8s ease 2.55s forwards;
 }
 
 /* Centred in the viewport by the grid above. */
@@ -283,9 +265,9 @@ textarea {
   }
 }
 
-@keyframes splash-door {
+@keyframes splash-fade {
   to {
-    transform: translateY(var(--door-to));
+    opacity: 0;
   }
 }
 
