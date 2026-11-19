@@ -186,7 +186,7 @@ export const contact = {
   directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=9%2F45+Block+9+Kirti+Nagar+Industrial+Area+New+Delhi+110015',
   mapEmbedUrl: 'https://maps.google.com/maps?q=9%2F45+Block+9+Kirti+Nagar+Industrial+Area+New+Delhi+110015&z=15&output=embed',
   hours: 'Monday – Saturday, 09:30 – 18:30',
-  phones: ['011-25172517', '9205923170', '7289941937'],
+  phones: ['011-45520647', '+91 92059 23170', '+91 72899 41937'],
   email: 'dgm.studiosrijan@gmail.com',
   social: [
     { label: 'Instagram', url: 'https://www.instagram.com/studiosrijan/' },
@@ -196,8 +196,12 @@ export const contact = {
   ],
 }
 
-/** Indian numbers as international tel: links, e.g. 011-25172517 → tel:+911125172517. */
-export const telHref = (phone: string) => `tel:+91${phone.replace(/\D/g, '').replace(/^0/, '')}`
+/** Indian numbers as tel: links: "011-45520647" → tel:+911145520647, "+91 92059 23170" → tel:+919205923170. */
+export const telHref = (phone: string) => {
+  const digits = phone.replace(/\D/g, '')
+  const local = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits.replace(/^0/, '')
+  return `tel:+91${local}`
+}
 
 // ---------------------------------------------------------------------------
 // Principal Architect
