@@ -129,7 +129,8 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       <div className="project-card__meta">
         <h3 className="project-card__title">{project.title}</h3>
         <p className="project-card__info">
-          {project.discipline} · {project.location}
+          {project.status ? `${project.status} · ` : ''}
+          {project.location}
         </p>
       </div>
     </Link>

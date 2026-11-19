@@ -2,31 +2,26 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Photo, ProjectCard, Slideshow } from './components'
-import { contact, mission, principal, projects, services, studio, team, telHref, values, vision } from './content'
-import type { MediaLink } from './content'
-import type { Discipline } from './content'
+import { contact, mission, principal, projects, services, studio, telHref, values, vision } from './content'
+import type { Category, MediaLink } from './content'
 
 export function Home() {
+  const [featured] = projects
   return (
     <>
       <section className="hero">
-        <Photo className="hero__image" alt="Featured Studio Srijan project" label="Featured project photo" />
+        <Photo className="hero__image" src={featured.images[0]} alt={`${featured.title}, ${featured.location}`} />
         <div className="wrap hero__text">
-          <p className="label">Est. {studio.founded} · New Delhi</p>
+          <p className="label">
+            {studio.descriptor} · Est. {studio.founded} · New Delhi
+          </p>
           <h1 className="display">{studio.tagline}</h1>
         </div>
       </section>
 
       <section className="wrap section intro">
         <p className="lead">{studio.intro}</p>
-        <dl className="stats">
-          {studio.stats.map((stat) => (
-            <div key={stat.label}>
-              <dt>{stat.label}</dt>
-              <dd>{stat.value}</dd>
-            </div>
-          ))}
-        </dl>
+        <Stats />
       </section>
 
       <Approach />
@@ -51,15 +46,8 @@ export function Home() {
 
       <section className="wrap section">
         <h2 className="heading">What we do</h2>
-        <ol className="services">
-          {services.map((service, index) => (
-            <li key={service.name}>
-              <span className="services__num">{String(index + 1).padStart(2, '0')}</span>
-              <h3>{service.name}</h3>
-              <p>{service.description}</p>
-            </li>
-          ))}
-        </ol>
+        <Services />
+        <p className="muted services__note">{studio.technology}</p>
       </section>
 
       <ContactBand />
@@ -67,17 +55,45 @@ export function Home() {
   )
 }
 
-const FILTERS: ('All' | Discipline)[] = ['All', 'Architecture', 'Interior Design', 'Management']
+function Stats({ column = false }: { column?: boolean }) {
+  return (
+    <dl className={`stats${column ? ' stats--column' : ''}`}>
+      {studio.stats.map((stat) => (
+        <div key={stat.label}>
+          <dt>{stat.label}</dt>
+          <dd>{stat.value}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+function Services() {
+  return (
+    <ol className="services">
+      {services.map((service, index) => (
+        <li key={service.name}>
+          <span className="services__num">{String(index + 1).padStart(2, '0')}</span>
+          <h3>{service.name}</h3>
+          <p>{service.description}</p>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+const FILTERS: ('All' | Category)[] = ['All', 'Residences', 'Farmhouses', 'Residential complex']
 
 export function Projects() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>('All')
-  const shown = projects.filter((project) => filter === 'All' || project.discipline === filter)
+  const shown = projects.filter((project) => filter === 'All' || project.category === filter)
 
   return (
     <section className="wrap page">
       <header className="page__head">
         <p className="label">Projects</p>
-        <h1 className="display display--sm">{studio.stats[2].value} projects across three decades.</h1>
+        <h1 className="display display--sm">Homes shaped by the cities they belong to.</h1>
+        <p className="lead page__lead">{studio.residentialIntro}</p>
       </header>
 
       <div className="filters" role="group" aria-label="Filter projects">
@@ -115,16 +131,16 @@ export function ProjectDetail() {
           <h1 className="display display--sm">{project.title}</h1>
           <dl className="detail__facts">
             <div>
-              <dt>Discipline</dt>
-              <dd>{project.discipline}</dd>
+              <dt>Type</dt>
+              <dd>{project.category}</dd>
             </div>
             <div>
               <dt>Location</dt>
               <dd>{project.location}</dd>
             </div>
             <div>
-              <dt>Year</dt>
-              <dd>{project.year}</dd>
+              <dt>Status</dt>
+              <dd>{project.status ?? 'Completed'}</dd>
             </div>
           </dl>
         </header>
@@ -150,18 +166,11 @@ export function Team() {
       <section className="wrap page">
         <header className="page__head">
           <p className="label">Team</p>
-          <h1 className="display display--sm">The people behind thirty years of work.</h1>
+          <h1 className="display display--sm">From a team of two to a studio of fifty.</h1>
         </header>
         <div className="studio__intro">
-          <p className="lead">{studio.intro}</p>
-          <dl className="stats stats--column">
-            {studio.stats.map((stat) => (
-              <div key={stat.label}>
-                <dt>{stat.label}</dt>
-                <dd>{stat.value}</dd>
-              </div>
-            ))}
-          </dl>
+          <p className="lead">{studio.about}</p>
+          <Stats column />
         </div>
       </section>
 
@@ -170,33 +179,29 @@ export function Team() {
       </section>
 
       <section className="wrap section">
-        <h2 className="heading">The team</h2>
-        <ul className="team">
-          {team
-            .filter((person) => person.name !== principal.name)
-            .map((person, index) => (
-              <li key={`${person.name}-${index}`}>
-                <Photo src={person.photo} alt={person.name} label="Portrait" />
-                <h3>{person.name}</h3>
-                <p>{person.role}</p>
-              </li>
-            ))}
-        </ul>
+        <h2 className="heading">Meet our team</h2>
+        <figure className="team-photo">
+          <Photo src={studio.team.photo} alt="The Studio Srijan team outside the studio" />
+          <figcaption className="lead">{studio.team.text}</figcaption>
+        </figure>
       </section>
 
-      <Photo className="wide-photo" alt="The Studio Srijan team" label="Team photo" />
-
       <section className="wrap section">
-        <h2 className="heading">Disciplines</h2>
-        <ol className="services">
-          {services.map((service, index) => (
-            <li key={service.name}>
-              <span className="services__num">{String(index + 1).padStart(2, '0')}</span>
-              <h3>{service.name}</h3>
-              <p>{service.description}</p>
+        <h2 className="heading">How we grew</h2>
+        <ol className="timeline">
+          {studio.growth.map((step) => (
+            <li key={step.year}>
+              <span className="timeline__year">{step.year}</span>
+              <p>{step.text}</p>
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="wrap section">
+        <h2 className="heading">Disciplines</h2>
+        <Services />
+        <p className="muted services__note">{studio.technology}</p>
       </section>
 
       <ContactBand />
@@ -205,24 +210,23 @@ export function Team() {
 }
 
 /** Principal Architect feature with a recognition strip; used on Home and Team. */
-function PrincipalFeature({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
-  const Heading = headingLevel === 2 ? 'h2' : 'h3'
-  const [award] = principal.awards
+function PrincipalFeature() {
+  const [award, jury] = principal.awards
   const highlights = [
-    { label: award.name, detail: [award.detail, award.year].join(' · '), href: '#awards' },
-    { label: 'Author', detail: principal.book.title, href: '#book' },
-    { label: 'Podcasts', detail: `${principal.podcasts.length} appearances`, href: '#podcasts' },
-    { label: 'In the news', detail: `${principal.press.length} articles`, href: '#press' },
+    { label: award.name, detail: `${award.detail}, ${award.year}`, href: '#awards' },
+    { label: 'Author', detail: `${principal.book.title} (with ${principal.book.coAuthor})`, href: '#book' },
+    { label: `${jury.name} jury`, detail: 'Jury panel for the last five years', href: '#awards' },
+    { label: 'In the news', detail: 'Times of India, Forbes India', href: '#press' },
   ]
 
   return (
     <div className="feature">
       <Link to="/principal-architect" className="feature__portrait" tabIndex={-1} aria-hidden="true">
-        <Photo src={principal.portrait} alt="" label="Portrait" />
+        <Photo src={principal.portrait} alt="" />
       </Link>
       <div className="feature__body">
-        <p className="label">Led by our {principal.role}</p>
-        <Heading className="display display--sm">{principal.name}</Heading>
+        <p className="label">Founder &amp; {principal.role}</p>
+        <h2 className="display display--sm">{principal.name}</h2>
         <ul className="recognition" aria-label="Recognition">
           {highlights.map((item) => (
             <li key={item.label}>
@@ -243,28 +247,27 @@ function PrincipalFeature({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
 
 function Approach() {
   return (
-    <section className="wrap section approach" aria-labelledby="approach-title">
-      <p className="label" id="approach-title">
-        Our mission
+    <section className="wrap section approach" aria-labelledby="vision-title">
+      <p className="label" id="vision-title">
+        Our vision
       </p>
-      <p className="approach__mission">{mission}</p>
+      <p className="approach__mission">{vision.headline}</p>
+      <p className="lead approach__vision-text">{vision.text}</p>
 
       <div className="approach__grid">
         <div>
-          <p className="label">Our vision</p>
-          <p className="approach__vision">{vision}</p>
+          <p className="label">Our mission</p>
+          <p className="approach__vision">{mission}</p>
         </div>
-        <div>
-          <p className="label">Our values</p>
-          <ul className="values">
-            {values.map((value) => (
-              <li key={value.name}>
-                <h3>{value.name}</h3>
-                <p>{value.source}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="values" aria-label="Our values">
+          {values.map((value) => (
+            <li key={value.name}>
+              <h3>{value.name}</h3>
+              <p className="values__source">{value.source}</p>
+              <p>{value.text}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )
@@ -272,32 +275,45 @@ function Approach() {
 
 export function PrincipalArchitect() {
   const { book } = principal
+  const sections = [
+    principal.videos.length > 0 && ['videos', 'Videos'],
+    ['awards', 'Awards'],
+    ['book', 'Book'],
+    principal.podcasts.length > 0 && ['podcasts', 'Podcasts'],
+    ['press', 'In the news'],
+  ].filter(Boolean) as [string, string][]
+
   return (
     <>
       <section className="wrap page">
         <header className="principal">
-          <Photo className="principal__portrait" src={principal.portrait} alt={principal.name} label="Portrait" />
+          <Photo className="principal__portrait" src={principal.portrait} alt={principal.name} />
           <div>
-            <p className="label">{principal.role}</p>
+            <p className="label">Founder &amp; {principal.role}</p>
             <h1 className="display display--sm">{principal.name}</h1>
             <p className="lead principal__bio">{principal.bio}</p>
+            <ul className="principal__background">
+              {principal.background.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
             <nav className="principal__jump" aria-label="On this page">
-              <a href="#videos">Videos</a>
-              <a href="#awards">Awards</a>
-              <a href="#book">Book</a>
-              <a href="#podcasts">Podcasts</a>
-              <a href="#press">In the news</a>
+              {sections.map(([id, label]) => (
+                <a key={id} href={`#${id}`}>
+                  {label}
+                </a>
+              ))}
             </nav>
           </div>
         </header>
       </section>
 
-      <section id="videos" className="wrap section">
-        <h2 className="heading">Featured videos</h2>
-        <div className="videos">
-          {principal.videos.map((video, index) => (
-            <figure key={index}>
-              {video.youtubeId ? (
+      {principal.videos.length > 0 && (
+        <section id="videos" className="wrap section">
+          <h2 className="heading">Featured videos</h2>
+          <div className="videos">
+            {principal.videos.map((video) => (
+              <figure key={video.youtubeId}>
                 <iframe
                   className="video"
                   src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}`}
@@ -306,37 +322,39 @@ export function PrincipalArchitect() {
                   allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                   allowFullScreen
                 />
-              ) : (
-                <Photo className="video" alt={video.title} label="Video" />
-              )}
+                <figcaption>
+                  <h3>{video.title}</h3>
+                  {video.source && <p>{video.source}</p>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section id="awards" className="wrap section">
+        <h2 className="heading">Awards &amp; recognition</h2>
+        <div className="awards-grid">
+          {principal.awards.map((award) => (
+            <figure key={award.name}>
+              {award.image && <Photo className="awards-grid__image" src={award.image} alt={`${award.name}: ${award.detail}`} />}
               <figcaption>
-                <h3>{video.title}</h3>
-                {video.source && <p>{video.source}</p>}
+                <span className="awards__year">{award.year}</span>
+                <h3>{award.name}</h3>
+                <p>{award.detail}</p>
               </figcaption>
             </figure>
           ))}
         </div>
       </section>
 
-      <section id="awards" className="wrap section">
-        <h2 className="heading">Awards &amp; recognition</h2>
-        <ul className="awards">
-          {principal.awards.map((award, index) => (
-            <li key={index}>
-              <span className="awards__year">{award.year}</span>
-              <h3>{award.name}</h3>
-              <p>{award.detail}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
       <section id="book" className="wrap section">
         <h2 className="heading">The book</h2>
         <div className="book">
-          <Photo className="book__cover" src={book.cover} alt={`Cover of ${book.title}`} label="Book cover" />
+          <Photo className="book__cover" src={book.cover} alt={`Cover of ${book.title}: ${book.subtitle}`} />
           <div>
             <h3 className="display display--sm">{book.title}</h3>
+            <p className="book__subtitle">{book.subtitle}</p>
             <p className="lead book__text">{book.description}</p>
             {book.url && (
               <a href={book.url} target="_blank" rel="noreferrer" className="button">
@@ -347,14 +365,30 @@ export function PrincipalArchitect() {
         </div>
       </section>
 
-      <section id="podcasts" className="wrap section">
-        <h2 className="heading">Podcasts</h2>
-        <MediaList items={principal.podcasts} action="Listen" />
-      </section>
+      {principal.podcasts.length > 0 && (
+        <section id="podcasts" className="wrap section">
+          <h2 className="heading">Podcasts</h2>
+          <MediaList items={principal.podcasts} action="Listen" />
+        </section>
+      )}
 
       <section id="press" className="wrap section">
         <h2 className="heading">In the news</h2>
-        <MediaList items={principal.press} action="Read" />
+        <div className="press-grid">
+          {principal.press
+            .filter((item) => item.image)
+            .map((item) => (
+              <figure key={item.title}>
+                <Photo className="press-grid__image" src={item.image} alt={`${item.outlet}: ${item.title}`} />
+                <figcaption>
+                  <span className="media-list__outlet">{item.outlet}</span>
+                  <h3>{item.title}</h3>
+                  {item.date && <p>{item.date}</p>}
+                </figcaption>
+              </figure>
+            ))}
+        </div>
+        <MediaList items={principal.press.filter((item) => !item.image)} action="Read" />
       </section>
 
       <ContactBand />
@@ -363,6 +397,7 @@ export function PrincipalArchitect() {
 }
 
 function MediaList({ items, action }: { items: MediaLink[]; action: string }) {
+  if (items.length === 0) return null
   return (
     <ul className="media-list">
       {items.map((item, index) => {
