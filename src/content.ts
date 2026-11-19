@@ -11,9 +11,15 @@ export const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replac
 
 export type Category = 'Residences' | 'Farmhouses' | 'Residential complex'
 
+export type Discipline = 'Architecture' | 'Interior Design' | 'Management'
+
+/** URL-friendly name, e.g. "Interior Design" → "interior-design". */
+export const disciplineSlug = (discipline: Discipline) => discipline.toLowerCase().replace(/\s+/g, '-')
+
 export interface Project {
   slug: string
   title: string
+  discipline: Discipline
   category: Category
   location: string
   /** e.g. "Upcoming". Omit for completed work. */
@@ -79,7 +85,7 @@ export const values = [
 ]
 
 // Disciplines named on studiosrijan.com; descriptions follow the company profile.
-export const services = [
+export const services: { name: Discipline; description: string }[] = [
   {
     name: 'Architecture',
     description: 'From luxury residences and farmhouses to large-scale residential and commercial developments.',
@@ -100,6 +106,7 @@ export const projects: Project[] = [
   {
     slug: 'dera-mandi-farm-house',
     title: 'Dera Mandi Farm House',
+    discipline: 'Architecture',
     category: 'Farmhouses',
     location: 'New Delhi',
     summary: 'Blending modern design with nature’s serenity — a farmhouse in Delhi NCR that redefines luxury and tranquility.',
@@ -108,6 +115,7 @@ export const projects: Project[] = [
   {
     slug: 'gurugram-villas',
     title: 'Gurugram Villas',
+    discipline: 'Architecture',
     category: 'Residences',
     location: 'Gurugram, NCR',
     summary: 'Exclusive villas and high-end residences that exemplify luxury and innovation.',
@@ -116,6 +124,7 @@ export const projects: Project[] = [
   {
     slug: 'varanasi-residences',
     title: 'Varanasi Residences',
+    discipline: 'Architecture',
     category: 'Residences',
     location: 'Varanasi',
     summary: 'Soulful residences that reflect the city’s spiritual essence, blending traditional aesthetics with contemporary living comforts.',
@@ -124,6 +133,7 @@ export const projects: Project[] = [
   {
     slug: 'coimbatore-residential-complex',
     title: 'Coimbatore Residential Complex',
+    discipline: 'Architecture',
     category: 'Residential complex',
     location: 'Coimbatore',
     status: 'Upcoming',
@@ -133,6 +143,7 @@ export const projects: Project[] = [
   {
     slug: 'new-delhi-residences',
     title: 'New Delhi Residences',
+    discipline: 'Architecture',
     category: 'Residences',
     location: 'New Delhi',
     summary: 'A wide array of residential projects for every taste — from the ultra-luxurious to independent farmhouses for those seeking exclusivity.',
@@ -141,6 +152,7 @@ export const projects: Project[] = [
   {
     slug: 'noida-residences',
     title: 'Noida Residences',
+    discipline: 'Architecture',
     category: 'Residences',
     location: 'Noida, NCR',
     summary: 'Distinctive elevations that make a strong first impression through refined proportions, elegant detailing and timeless character.',
@@ -149,6 +161,7 @@ export const projects: Project[] = [
   {
     slug: 'mathura-residence',
     title: 'Mathura Residence',
+    discipline: 'Architecture',
     category: 'Residences',
     location: 'Mathura, Uttar Pradesh',
     summary: 'Set in the spiritual and cultural heart of India, this residence is a harmonious union of tradition and modernity.',
@@ -157,6 +170,7 @@ export const projects: Project[] = [
   {
     slug: 'noida-contemporary-residence',
     title: 'Contemporary Residence',
+    discipline: 'Architecture',
     category: 'Residences',
     location: 'Noida, NCR',
     summary: 'Contemporary elevations with bold geometric forms, balanced proportions and a harmonious blend of textures, materials and natural elements.',
@@ -165,6 +179,7 @@ export const projects: Project[] = [
   {
     slug: 'noida-farm-house',
     title: 'Noida Farm House',
+    discipline: 'Architecture',
     category: 'Farmhouses',
     location: 'Noida, NCR',
     summary: 'Blending modern design with nature’s serenity — a farmhouse that redefines luxury and tranquility.',
@@ -173,6 +188,7 @@ export const projects: Project[] = [
   {
     slug: 'new-delhi-facades',
     title: 'Classical Facades',
+    discipline: 'Architecture',
     category: 'Residences',
     location: 'New Delhi',
     summary: 'Elegant façades that combine clean architectural lines with subtle detailing, creating a refined and visually cohesive identity.',

@@ -513,12 +513,67 @@ textarea {
 }
 
 .services li {
+  border-bottom: 1px solid var(--line);
+}
+
+.services__row {
   display: grid;
-  grid-template-columns: 80px 1fr 1.2fr;
+  grid-template-columns: 80px 1fr 1.2fr auto;
   gap: 24px;
   align-items: baseline;
   padding: 32px 0;
-  border-bottom: 1px solid var(--line);
+  transition: padding 0.3s ease;
+}
+
+.services__cta {
+  color: var(--brand);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.services__cta::after {
+  margin-left: 8px;
+  content: '→';
+}
+
+/* With a mouse, "View projects" appears on hover; touch screens always show it. */
+@media (hover: hover) {
+  .services__cta {
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+      opacity 0.25s,
+      transform 0.25s;
+  }
+
+  .services__row:hover,
+  .services__row:focus-visible {
+    padding-left: 12px;
+  }
+
+  .services__row:hover .services__cta,
+  .services__row:focus-visible .services__cta {
+    opacity: 1;
+    transform: none;
+  }
+
+  .services__row:hover h3 {
+    color: var(--brand);
+  }
+}
+
+.empty-tab {
+  padding: 48px 0 24px;
+}
+
+.empty-tab .muted {
+  margin-top: 12px;
+}
+
+.empty-tab a {
+  border-bottom: 1px solid currentColor;
+  color: var(--brand);
 }
 
 .services__num {
@@ -1444,7 +1499,7 @@ main:has(> .band:last-child) + .footer {
     gap: 48px;
   }
 
-  .services li {
+  .services__row {
     grid-template-columns: 1fr;
     gap: 8px;
   }

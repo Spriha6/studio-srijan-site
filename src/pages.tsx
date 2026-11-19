@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { HeroSlides, Photo, ProjectCard, Slideshow } from './components'
-import { contact, mission, principal, projects, services, studio, telHref, values, vision } from './content'
-import type { Category, MediaLink } from './content'
+import { contact, disciplineSlug, mission, principal, projects, services, studio, telHref, values, vision } from './content'
+import type { Discipline, MediaLink } from './content'
 
 export function Home() {
   const [first, second] = studio.tagline.split(', ')
@@ -72,25 +72,35 @@ function Stats({ column = false }: { column?: boolean }) {
   )
 }
 
+/** Disciplines; each row links to its tab on the Projects page. */
 function Services() {
   return (
     <ol className="services">
       {services.map((service, index) => (
         <li key={service.name}>
-          <span className="services__num">{String(index + 1).padStart(2, '0')}</span>
-          <h3>{service.name}</h3>
-          <p>{service.description}</p>
+          <Link to={`/projects?discipline=${disciplineSlug(service.name)}`} className="services__row">
+            <span className="services__num">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{service.name}</h3>
+            <p>{service.description}</p>
+            <span className="services__cta">View projects</span>
+          </Link>
         </li>
       ))}
     </ol>
   )
 }
 
-const FILTERS: ('All' | Category)[] = ['All', 'Residences', 'Farmhouses', 'Residential complex']
+const FILTERS: ('All' | Discipline)[] = ['All', 'Architecture', 'Interior Design', 'Management']
 
 export function Projects() {
-  const [filter, setFilter] = useState<(typeof FILTERS)[number]>('All')
-  const shown = projects.filter((project) => filter === 'All' || project.category === filter)
+  // The selected tab lives in the URL (?discipline=architecture) so other pages can link straight to it.
+  const [params, setParams] = useSearchParams()
+  const filter = FILTERS.find((item) => item !== 'All' && disciplineSlug(item) === params.get('discipline')) ?? 'All'
+  const shown = projects.filter((project) => filter === 'All' || project.discipline === filter)
+
+  function choose(item: (typeof FILTERS)[number]) {
+    setParams(item === 'All' ? {} : { discipline: disciplineSlug(item) }, { replace: true })
+  }
 
   return (
     <section className="wrap page">
@@ -100,20 +110,28 @@ export function Projects() {
         <p className="lead page__lead">{studio.residentialIntro}</p>
       </header>
 
-      <div className="filters" role="group" aria-label="Filter projects">
+      <div className="filters" role="group" aria-label="Filter projects by discipline">
         {FILTERS.map((item) => (
-          <button key={item} type="button" aria-pressed={filter === item} onClick={() => setFilter(item)}>
+          <button key={item} type="button" aria-pressed={filter === item} onClick={() => choose(item)}>
             {item}
           </button>
         ))}
       </div>
 
-      <div className="project-grid project-grid--three">
-        {shown.map((project) => (
-          <ProjectCard key={project.slug} project={project} index={projects.indexOf(project)} />
-        ))}
-      </div>
-      {shown.length === 0 && <p className="muted">No projects in this category yet.</p>}
+      {shown.length > 0 ? (
+        <div className="project-grid project-grid--three">
+          {shown.map((project) => (
+            <ProjectCard key={project.slug} project={project} index={projects.indexOf(project)} />
+          ))}
+        </div>
+      ) : (
+        <div className="empty-tab">
+          <p className="lead">{filter} projects are coming soon.</p>
+          <p className="muted">
+            In the meantime, <Link to="/contact">get in touch</Link> to see examples of our {filter.toLowerCase()} work.
+          </p>
+        </div>
+      )}
     </section>
   )
 }
