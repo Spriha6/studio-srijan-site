@@ -18,4 +18,4 @@ Everything the studio says lives in **`src/content.ts`** — no layout code need
 - **Services:** the one-line descriptions are drafts — confirm them with the studio.
 - **Contact details** come from the current site.
 
-Pages: Home, Projects (filter by discipline), Project detail, Studio, Contact. The contact form opens the visitor's email app addressed to the studio; there's no server.
+Pages: Home, Projects (filter by discipline), Project detail, Team, Location (map + directions), Contact. The contact form opens the visitor's email app addressed to the studio; there's no server.

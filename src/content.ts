@@ -82,6 +82,8 @@ export const team: Person[] = [
 export const contact = {
   address: ['9/45, Block 9, Kirti Nagar Industrial Area', 'Kirti Nagar, New Delhi, Delhi 110015'],
   mapUrl: 'https://www.google.com/maps/search/?api=1&query=9%2F45+Block+9+Kirti+Nagar+Industrial+Area+New+Delhi+110015',
+  directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=9%2F45+Block+9+Kirti+Nagar+Industrial+Area+New+Delhi+110015',
+  mapEmbedUrl: 'https://maps.google.com/maps?q=9%2F45+Block+9+Kirti+Nagar+Industrial+Area+New+Delhi+110015&z=15&output=embed',
   hours: 'Monday – Saturday, 09:30 – 18:30',
   phones: ['011-25172517', '9205923170', '7289941937'],
   email: 'dgm.studiosrijan@gmail.com',

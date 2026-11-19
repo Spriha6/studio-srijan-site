@@ -143,13 +143,13 @@ export function ProjectDetail() {
   )
 }
 
-export function Studio() {
+export function Team() {
   return (
     <>
       <section className="wrap page">
         <header className="page__head">
-          <p className="label">Studio</p>
-          <h1 className="display display--sm">Thirty years of designing, building and managing — together.</h1>
+          <p className="label">Team</p>
+          <h1 className="display display--sm">The people behind thirty years of work.</h1>
         </header>
         <div className="studio__intro">
           <p className="lead">{studio.intro}</p>
@@ -164,8 +164,6 @@ export function Studio() {
         </div>
       </section>
 
-      <Photo className="wide-photo" alt="The Studio Srijan office" label="Studio / team photo" />
-
       <section className="wrap section">
         <h2 className="heading">People</h2>
         <ul className="team">
@@ -179,6 +177,8 @@ export function Studio() {
         </ul>
       </section>
 
+      <Photo className="wide-photo" alt="The Studio Srijan team" label="Team photo" />
+
       <section className="wrap section">
         <h2 className="heading">Disciplines</h2>
         <ol className="services">
@@ -190,6 +190,65 @@ export function Studio() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <ContactBand />
+    </>
+  )
+}
+
+export function Location() {
+  return (
+    <>
+      <section className="wrap page">
+        <header className="page__head">
+          <p className="label">Location</p>
+          <h1 className="display display--sm">Visit the studio in Kirti Nagar, New Delhi.</h1>
+        </header>
+
+        <div className="location">
+          <div className="location__map">
+            <iframe
+              src={contact.mapEmbedUrl}
+              title="Map showing Studio Srijan in Kirti Nagar, New Delhi"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+
+          <div className="contact__details">
+            <div>
+              <p className="label">Address</p>
+              <address>
+                {contact.address.map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </address>
+              <div className="location__links">
+                <a href={contact.directionsUrl} target="_blank" rel="noreferrer" className="arrow-link">
+                  Get directions
+                </a>
+                <a href={contact.mapUrl} target="_blank" rel="noreferrer" className="arrow-link">
+                  Open in Maps
+                </a>
+              </div>
+            </div>
+            <div>
+              <p className="label">Office hours</p>
+              <p>{contact.hours}</p>
+              <p className="muted">Closed on Sundays</p>
+            </div>
+            <div>
+              <p className="label">Before you visit</p>
+              <p>Call ahead so the right person is in the studio to meet you.</p>
+              {contact.phones.map((phone) => (
+                <a key={phone} href={telHref(phone)}>
+                  {phone}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
       <ContactBand />
@@ -254,9 +313,9 @@ export function Contact() {
                 <span key={line}>{line}</span>
               ))}
             </address>
-            <a href={contact.mapUrl} target="_blank" rel="noreferrer" className="arrow-link">
-              Open in Maps
-            </a>
+            <Link to="/location" className="arrow-link">
+              Map &amp; directions
+            </Link>
           </div>
           <div>
             <p className="label">Hours</p>
