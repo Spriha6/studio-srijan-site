@@ -43,6 +43,15 @@ export const studio = {
   leadArchitect: 'Gavish Sahni',
 }
 
+// SOURCE: provided by the studio.
+export const mission = 'Designing lifestyles, building trust.'
+export const vision = 'To be the most trusted design firm in India by 2030.'
+export const values = [
+  { name: 'Creativity', source: 'from curiosity and learning' },
+  { name: 'Clarity', source: 'from intention and consciousness' },
+  { name: 'Control', source: 'from consistent improvement and transformation' },
+]
+
 // SOURCE: the three disciplines listed on studiosrijan.com.
 // PLACEHOLDER: the one-line descriptions are drafts for the studio to confirm.
 export const services: { name: Discipline; description: string }[] = [
@@ -97,3 +106,65 @@ export const contact = {
 
 /** Indian numbers as international tel: links, e.g. 011-25172517 → tel:+911125172517. */
 export const telHref = (phone: string) => `tel:+91${phone.replace(/\D/g, '').replace(/^0/, '')}`
+
+// ---------------------------------------------------------------------------
+// Principal Architect
+// SOURCE: name and the Times Business Awards. Everything else is PLACEHOLDER:
+// add the real videos, awards, book, podcasts and press below.
+// ---------------------------------------------------------------------------
+
+export interface Video {
+  title: string
+  /** YouTube video id (the part after "v=" in the link). Leave empty for a placeholder. */
+  youtubeId?: string
+  source?: string
+  placeholder?: boolean
+}
+
+export interface Award {
+  name: string
+  detail: string
+  year: string
+  placeholder?: boolean
+}
+
+export interface MediaLink {
+  /** Show or publication name. */
+  outlet: string
+  title: string
+  date: string
+  url?: string
+  placeholder?: boolean
+}
+
+export const principal = {
+  name: 'Gavish Sahni',
+  role: 'Principal Architect',
+  portrait: undefined as string | undefined,
+  // PLACEHOLDER: a short bio in the studio's own words.
+  bio: 'A short introduction to Gavish Sahni — background, design philosophy, and the thirty years of work that shaped Studio Srijan.',
+  videos: [
+    { title: 'Feature video title', source: 'Channel or publication', placeholder: true },
+    { title: 'Feature video title', source: 'Channel or publication', placeholder: true },
+  ] as Video[],
+  awards: [
+    { name: 'Times Business Awards', detail: 'Award category', year: 'Year', placeholder: true },
+    { name: 'Award name', detail: 'Award category', year: 'Year', placeholder: true },
+  ] as Award[],
+  book: {
+    title: 'Book title',
+    description: 'A sentence or two about what the book covers and who it is for.',
+    cover: undefined as string | undefined,
+    url: undefined as string | undefined,
+    placeholder: true,
+  },
+  podcasts: [
+    { outlet: 'Podcast name', title: 'Episode title', date: 'Date', placeholder: true },
+    { outlet: 'Podcast name', title: 'Episode title', date: 'Date', placeholder: true },
+  ] as MediaLink[],
+  press: [
+    { outlet: 'Publication', title: 'Article headline', date: 'Date', placeholder: true },
+    { outlet: 'Publication', title: 'Article headline', date: 'Date', placeholder: true },
+    { outlet: 'Publication', title: 'Article headline', date: 'Date', placeholder: true },
+  ] as MediaLink[],
+}

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Photo, ProjectCard } from './components'
-import { contact, projects, services, studio, team, telHref } from './content'
+import { contact, mission, principal, projects, services, studio, team, telHref, values, vision } from './content'
+import type { MediaLink } from './content'
 import type { Discipline } from './content'
 
 export function Home() {
@@ -27,6 +28,8 @@ export function Home() {
           ))}
         </dl>
       </section>
+
+      <Approach />
 
       <section className="wrap section">
         <div className="section__head">
@@ -167,13 +170,24 @@ export function Team() {
       <section className="wrap section">
         <h2 className="heading">People</h2>
         <ul className="team">
-          {team.map((person, index) => (
-            <li key={`${person.name}-${index}`}>
-              <Photo src={person.photo} alt={person.name} label="Portrait" />
-              <h3>{person.name}</h3>
-              <p>{person.role}</p>
-            </li>
-          ))}
+          {team.map((person, index) =>
+            person.name === principal.name ? (
+              <li key={person.name}>
+                <Link to="/principal-architect" className="team__link">
+                  <Photo src={principal.portrait ?? person.photo} alt={person.name} label="Portrait" />
+                  <h3>{person.name}</h3>
+                  <p>{principal.role}</p>
+                  <span className="arrow-link">Read more</span>
+                </Link>
+              </li>
+            ) : (
+              <li key={`${person.name}-${index}`}>
+                <Photo src={person.photo} alt={person.name} label="Portrait" />
+                <h3>{person.name}</h3>
+                <p>{person.role}</p>
+              </li>
+            ),
+          )}
         </ul>
       </section>
 
@@ -194,6 +208,155 @@ export function Team() {
 
       <ContactBand />
     </>
+  )
+}
+
+function Approach() {
+  return (
+    <section className="wrap section approach" aria-labelledby="approach-title">
+      <p className="label" id="approach-title">
+        Our mission
+      </p>
+      <p className="approach__mission">{mission}</p>
+
+      <div className="approach__grid">
+        <div>
+          <p className="label">Our vision</p>
+          <p className="approach__vision">{vision}</p>
+        </div>
+        <div>
+          <p className="label">Our values</p>
+          <ul className="values">
+            {values.map((value) => (
+              <li key={value.name}>
+                <h3>{value.name}</h3>
+                <p>{value.source}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function PrincipalArchitect() {
+  const { book } = principal
+  return (
+    <>
+      <section className="wrap page">
+        <header className="principal">
+          <Photo className="principal__portrait" src={principal.portrait} alt={principal.name} label="Portrait" />
+          <div>
+            <p className="label">{principal.role}</p>
+            <h1 className="display display--sm">{principal.name}</h1>
+            <p className="lead principal__bio">{principal.bio}</p>
+            <nav className="principal__jump" aria-label="On this page">
+              <a href="#videos">Videos</a>
+              <a href="#awards">Awards</a>
+              <a href="#book">Book</a>
+              <a href="#podcasts">Podcasts</a>
+              <a href="#press">In the news</a>
+            </nav>
+          </div>
+        </header>
+      </section>
+
+      <section id="videos" className="wrap section">
+        <h2 className="heading">Featured videos</h2>
+        <div className="videos">
+          {principal.videos.map((video, index) => (
+            <figure key={index}>
+              {video.youtubeId ? (
+                <iframe
+                  className="video"
+                  src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}`}
+                  title={video.title}
+                  loading="lazy"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                />
+              ) : (
+                <Photo className="video" alt={video.title} label="Video" />
+              )}
+              <figcaption>
+                <h3>{video.title}</h3>
+                {video.source && <p>{video.source}</p>}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section id="awards" className="wrap section">
+        <h2 className="heading">Awards &amp; recognition</h2>
+        <ul className="awards">
+          {principal.awards.map((award, index) => (
+            <li key={index}>
+              <span className="awards__year">{award.year}</span>
+              <h3>{award.name}</h3>
+              <p>{award.detail}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="book" className="wrap section">
+        <h2 className="heading">The book</h2>
+        <div className="book">
+          <Photo className="book__cover" src={book.cover} alt={`Cover of ${book.title}`} label="Book cover" />
+          <div>
+            <h3 className="display display--sm">{book.title}</h3>
+            <p className="lead book__text">{book.description}</p>
+            {book.url && (
+              <a href={book.url} target="_blank" rel="noreferrer" className="button">
+                Get the book
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section id="podcasts" className="wrap section">
+        <h2 className="heading">Podcasts</h2>
+        <MediaList items={principal.podcasts} action="Listen" />
+      </section>
+
+      <section id="press" className="wrap section">
+        <h2 className="heading">In the news</h2>
+        <MediaList items={principal.press} action="Read" />
+      </section>
+
+      <ContactBand />
+    </>
+  )
+}
+
+function MediaList({ items, action }: { items: MediaLink[]; action: string }) {
+  return (
+    <ul className="media-list">
+      {items.map((item, index) => {
+        const body = (
+          <>
+            <span className="media-list__outlet">{item.outlet}</span>
+            <span className="media-list__title">{item.title}</span>
+            <span className="media-list__date">{item.date}</span>
+            {item.url && <span className="media-list__action">{action} ↗</span>}
+          </>
+        )
+        return (
+          <li key={index}>
+            {item.url ? (
+              <a href={item.url} target="_blank" rel="noreferrer" className="media-list__row">
+                {body}
+              </a>
+            ) : (
+              <div className="media-list__row">{body}</div>
+            )}
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 

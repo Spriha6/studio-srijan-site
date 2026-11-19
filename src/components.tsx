@@ -32,6 +32,7 @@ const YEAR = new Date().getFullYear()
 const NAV = [
   ['/projects', 'Projects'],
   ['/team', 'Team'],
+  ['/principal-architect', 'Principal Architect'],
   ['/location', 'Location'],
   ['/contact', 'Contact'],
 ] as const

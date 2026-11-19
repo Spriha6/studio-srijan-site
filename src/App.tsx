@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Layout } from './components'
-import { Contact, Home, Location, NotFound, ProjectDetail, Projects, Team } from './pages'
+import { Contact, Home, Location, NotFound, PrincipalArchitect, ProjectDetail, Projects, Team } from './pages'
 
 export default function App() {
   return (
@@ -12,6 +12,7 @@ export default function App() {
           <Route path="projects/:slug" element={<ProjectDetail />} />
           <Route path="team" element={<Team />} />
           <Route path="studio" element={<Navigate to="/team" replace />} />
+          <Route path="principal-architect" element={<PrincipalArchitect />} />
           <Route path="location" element={<Location />} />
           <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
