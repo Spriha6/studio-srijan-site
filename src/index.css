@@ -542,19 +542,73 @@ textarea {
   color: var(--muted);
 }
 
-.detail__cover {
+/* Project photo slideshow */
+.slideshow {
+  position: relative;
+  overflow: hidden;
+}
+
+.slideshow:focus-visible {
+  outline-offset: -4px;
+}
+
+.slideshow__track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slideshow__slide {
+  flex: 0 0 100%;
+}
+
+.slideshow__slide .photo {
   height: min(80vh, 860px);
   aspect-ratio: auto;
 }
 
-.detail__summary {
-  margin: clamp(56px, 8vw, 112px) 0;
+.slideshow__next {
+  position: absolute;
+  top: 50%;
+  right: clamp(16px, 3vw, 40px);
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 22px;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
 }
 
-.detail__gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
+.slideshow__next:hover {
+  background: var(--ink);
+  transform: translateY(-50%) translateX(3px);
+}
+
+.slideshow__next:focus-visible {
+  outline-color: var(--brand-ink);
+  outline-offset: -6px;
+}
+
+.slideshow__count {
+  position: absolute;
+  bottom: 20px;
+  left: clamp(16px, 3vw, 40px);
+  padding: 4px 12px;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+.detail__summary {
+  margin: clamp(56px, 8vw, 112px) 0;
 }
 
 .next-project {
@@ -1107,8 +1161,7 @@ main:has(> .band:last-child) + .footer {
   }
 
   .project-grid,
-  .project-grid--three,
-  .detail__gallery {
+  .project-grid--three {
     grid-template-columns: 1fr;
     gap: 48px;
   }
@@ -1122,8 +1175,13 @@ main:has(> .band:last-child) + .footer {
     font-size: 36px;
   }
 
-  .detail__cover {
-    height: 50vh;
+  .slideshow__slide .photo {
+    height: 56vh;
+  }
+
+  .slideshow__next {
+    width: 52px;
+    height: 52px;
   }
 
   .wide-photo {

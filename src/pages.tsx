@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Photo, ProjectCard } from './components'
+import { Photo, ProjectCard, Slideshow } from './components'
 import { contact, mission, principal, projects, services, studio, team, telHref, values, vision } from './content'
 import type { MediaLink } from './content'
 import type { Discipline } from './content'
@@ -104,7 +104,6 @@ export function ProjectDetail() {
   const project = projects[index]
   if (!project) return <NotFound />
   const next = projects[(index + 1) % projects.length]
-  const gallery = project.images.length > 1 ? project.images.slice(1) : [undefined, undefined]
 
   return (
     <article className="page">
@@ -131,15 +130,10 @@ export function ProjectDetail() {
         </header>
       </div>
 
-      <Photo className="detail__cover" src={project.images[0]} alt={project.title} label="Main project photo" />
+      <Slideshow key={project.slug} images={project.images} alt={project.title} />
 
       <div className="wrap">
         <p className="lead detail__summary">{project.summary}</p>
-        <div className="detail__gallery">
-          {gallery.map((src, i) => (
-            <Photo key={i} src={src} alt={`${project.title}, view ${i + 2}`} label="Project photo" />
-          ))}
-        </div>
 
         <Link to={`/projects/${next.slug}`} className="next-project">
           <span className="label">Next project</span>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { contact, studio, telHref } from './content'
 import type { Project } from './content'
@@ -9,6 +9,66 @@ export function Photo({ src, alt, label = 'Photo', className = '' }: { src?: str
   return (
     <div className={`photo photo--placeholder ${className}`} role="img" aria-label={`${alt} (placeholder)`}>
       <span>{label}</span>
+    </div>
+  )
+}
+
+/**
+ * One photo at a time with a next arrow on the right (loops back to the start).
+ * Also works with the keyboard (← →, when focused) and by swiping on touch screens.
+ */
+export function Slideshow({ images, alt, count = 3 }: { images: string[]; alt: string; count?: number }) {
+  const slides: (string | undefined)[] = images.length > 0 ? images : Array.from({ length: count }, () => undefined)
+  const [index, setIndex] = useState(0)
+  const touchX = useRef<number | null>(null)
+  const go = (step: number) => setIndex((current) => (current + step + slides.length) % slides.length)
+
+  return (
+    <div
+      className="slideshow"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={`${alt} photos`}
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === 'ArrowRight') go(1)
+        if (event.key === 'ArrowLeft') go(-1)
+      }}
+      onTouchStart={(event) => {
+        touchX.current = event.touches[0].clientX
+      }}
+      onTouchEnd={(event) => {
+        if (touchX.current === null) return
+        const dx = event.changedTouches[0].clientX - touchX.current
+        if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1)
+        touchX.current = null
+      }}
+    >
+      <div className="slideshow__track" style={{ transform: `translateX(-${index * 100}%)` }}>
+        {slides.map((src, i) => (
+          <div
+            key={i}
+            className="slideshow__slide"
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${slides.length}`}
+            aria-hidden={i !== index}
+          >
+            <Photo src={src} alt={`${alt}, photo ${i + 1}`} label={`Project photo ${i + 1}`} />
+          </div>
+        ))}
+      </div>
+
+      {slides.length > 1 && (
+        <>
+          <button type="button" className="slideshow__next" onClick={() => go(1)} aria-label="Next photo">
+            <span aria-hidden="true">→</span>
+          </button>
+          <p className="slideshow__count" aria-live="polite">
+            {index + 1} / {slides.length}
+          </p>
+        </>
+      )}
     </div>
   )
 }
