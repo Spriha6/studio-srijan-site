@@ -1,7 +1,7 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { HeroSlides, Photo, ProjectCard, Slideshow } from './components'
 import { usePageMeta } from './seo'
-import { contact, mission, principal, projects, services, studio, telHref, values, vision, whatsappHref } from './content'
+import { contact, mission, principal, projects, services, studio, telHref, values, vision } from './content'
 import type { Category, MediaLink } from './content'
 
 export { Contact } from './contact'
@@ -29,9 +29,6 @@ export function Home() {
           <div className="hero__actions">
             <Link to="/projects" className="button">
               Explore projects
-            </Link>
-            <Link to="/contact?type=project" className="button button--outline">
-              Start a project
             </Link>
           </div>
         </div>
@@ -68,21 +65,18 @@ export function Home() {
         <p className="muted services__note">{studio.technology}</p>
       </section>
 
-      <Approach />
-
       <section className="wrap section">
         <PrincipalFeature />
-        <Link to="/team" className="team-teaser">
+        <div className="team-teaser">
           <Photo src={studio.team.photo} alt="The Studio Srijan team outside the studio" />
           <span className="team-teaser__text">
             <span className="label">The team</span>
             <span className="heading">{studio.stats[1].value} architects, designers and project managers</span>
-            <span className="arrow-link">Meet the team</span>
           </span>
-        </Link>
+        </div>
       </section>
 
-      <TalkToUs />
+      <ContactBand />
     </>
   )
 }
@@ -595,60 +589,7 @@ export function Location() {
         </div>
       </section>
 
-      <ContactBand />
     </>
-  )
-}
-
-/** Home page contact section with direct ways to reach the studio. */
-function TalkToUs() {
-  const [phone] = contact.phones
-  return (
-    <section className="band talk" aria-labelledby="talk-title">
-      <div className="wrap talk__inner">
-        <div>
-          <p className="label talk__label">Talk to us</p>
-          <h2 id="talk-title" className="display display--sm">
-            Have a project in mind?
-          </h2>
-          <p className="talk__text">
-            Tell us about your home, workplace or interior. We’ll get back to you to talk it through.
-          </p>
-          <Link to="/contact?type=project" className="button button--light">
-            Start a project
-          </Link>
-          <p className="talk__vendor">
-            Vendor, supplier or consultant? <Link to="/contact?type=vendor">Introduce your company →</Link>
-          </p>
-        </div>
-        <ul className="talk__ways">
-          <li>
-            <span className="talk__way-label">Call</span>
-            <a href={telHref(phone)}>{phone}</a>
-          </li>
-          {whatsappHref() && (
-            <li>
-              <span className="talk__way-label">WhatsApp</span>
-              <a href={whatsappHref()} target="_blank" rel="noreferrer">
-                Message us →
-              </a>
-            </li>
-          )}
-          <li>
-            <span className="talk__way-label">Email</span>
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          </li>
-          <li>
-            <span className="talk__way-label">Visit</span>
-            <Link to="/location">Kirti Nagar, New Delhi →</Link>
-          </li>
-          <li>
-            <span className="talk__way-label">Hours</span>
-            <span>{contact.hours}</span>
-          </li>
-        </ul>
-      </div>
-    </section>
   )
 }
 
@@ -657,8 +598,8 @@ function ContactBand({ title = 'Have a project in mind?' }: { title?: string }) 
     <section className="band">
       <div className="wrap band__inner">
         <h2 className="display display--sm">{title}</h2>
-        <Link to="/contact?type=project" className="button button--light">
-          Start a conversation
+        <Link to="/contact" className="button button--light">
+          Contact us
         </Link>
       </div>
     </section>

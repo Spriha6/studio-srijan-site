@@ -191,7 +191,6 @@ const NAV = [
   ['/projects', 'Projects'],
   ['/about', 'About'],
   ['/team', 'Team'],
-  ['/contact', 'Contact'],
 ] as const
 
 function Header() {
@@ -218,9 +217,9 @@ function Header() {
               {label}
             </NavLink>
           ))}
-          <Link to="/contact?type=project" className="button button--small header__cta">
-            Start a project
-          </Link>
+          <NavLink to="/contact" className="button button--small header__cta">
+            Contact
+          </NavLink>
         </nav>
       </div>
     </header>
@@ -260,9 +259,6 @@ function Footer() {
               WhatsApp
             </a>
           )}
-          <Link to="/contact?type=vendor" className="footer__link">
-            Vendors &amp; suppliers
-          </Link>
         </div>
         <div>
           <p className="label">Follow</p>

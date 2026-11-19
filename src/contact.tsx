@@ -284,15 +284,6 @@ export function Contact() {
               Map &amp; directions
             </Link>
           </div>
-          {type !== 'vendor' && (
-            <div>
-              <p className="label">Vendors &amp; suppliers</p>
-              <p className="muted">Materials, products, contracting or professional services?</p>
-              <button type="button" className="arrow-link" onClick={() => chooseType('vendor')}>
-                Send a vendor enquiry
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </section>

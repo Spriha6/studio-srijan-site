@@ -1657,10 +1657,6 @@ main:has(> .band:last-child) + .footer {
   align-items: flex-start;
 }
 
-.team-teaser:hover .heading {
-  color: var(--brand);
-}
-
 .filters__count {
   margin-left: 6px;
   color: var(--stone);
