@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { contact, projects, studio, telHref } from './content'
+import { asset, contact, projects, studio, telHref } from './content'
 import type { Project } from './content'
 
 const INTRO_KEY = 'srijan-intro-seen'
@@ -47,7 +47,7 @@ function Intro() {
   if (!visible) return null
   return (
     <div className="splash" aria-hidden="true" onClick={() => setVisible(false)}>
-      <img className="splash__mark" src="/brand/mark-black.png" alt="" />
+      <img className="splash__mark" src={asset('/brand/mark-black.png')} alt="" />
     </div>
   )
 }
@@ -198,7 +198,7 @@ function Header() {
     <header className={`header${open ? ' is-open' : ''}`}>
       <div className="wrap header__inner">
         <Link to="/" className="header__logo" aria-label={`${studio.name} — home`} onClick={() => setOpen(false)}>
-          <img src="/brand/logo-black.png" alt="" width="180" height="29" />
+          <img src={asset('/brand/logo-black.png')} alt="" width="180" height="29" />
         </Link>
         <button
           type="button"
@@ -226,7 +226,7 @@ function Footer() {
     <footer className="footer">
       <div className="wrap footer__grid">
         <div>
-          <img src="/brand/logo-white.png" alt={studio.name} className="footer__logo" />
+          <img src={asset('/brand/logo-white.png')} alt={studio.name} className="footer__logo" />
           <p className="footer__tagline">{studio.tagline}</p>
         </div>
         <div>

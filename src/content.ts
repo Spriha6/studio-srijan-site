@@ -6,6 +6,9 @@
  * details from the current studiosrijan.com. Images live in /public.
  */
 
+/** Public file path that also works when the site is served from a sub-folder (e.g. GitHub Pages). */
+export const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`
+
 export type Category = 'Residences' | 'Farmhouses' | 'Residential complex'
 
 export interface Project {
@@ -41,7 +44,7 @@ export const studio = {
     { year: 'Today', text: 'A dedicated team of 50, delivering 80 projects a year.' },
   ],
   team: {
-    photo: '/people/team.jpg',
+    photo: asset('/people/team.jpg'),
     text: 'Studio Srijan is a premier design firm dedicated to creating exceptional spaces. Our team of architects, designers and project managers brings a wealth of creativity and expertise to every project.',
   },
   technology:
@@ -91,7 +94,7 @@ export const services = [
   },
 ]
 
-const images = (folder: string) => [`/projects/${folder}/1.jpg`, `/projects/${folder}/2.jpg`]
+const images = (folder: string) => [asset(`/projects/${folder}/1.jpg`), asset(`/projects/${folder}/2.jpg`)]
 
 export const projects: Project[] = [
   {
@@ -226,7 +229,7 @@ export interface MediaLink {
 export const principal = {
   name: 'Gavish Sahni',
   role: 'Principal Architect',
-  portrait: '/people/gavish-sahni.jpg',
+  portrait: asset('/people/gavish-sahni.jpg'),
   bio: 'Gavish Sahni founded Studio Srijan and has led it for nearly three decades, from a team of two to a studio of fifty.',
   background: [
     'Degree in Architecture and Planning, IIT Roorkee (1987–1993).',
@@ -240,13 +243,13 @@ export const principal = {
       name: 'Times Business Awards',
       detail: 'Best Architect in Residential Projects',
       year: '2018',
-      image: '/press/times-business-award-2018.jpg',
+      image: asset('/press/times-business-award-2018.jpg'),
     },
     {
       name: 'FOAID India',
       detail: 'Member of the jury panel for the last five years',
       year: 'Jury',
-      image: '/press/foaid-jury.jpg',
+      image: asset('/press/foaid-jury.jpg'),
     },
   ] as Award[],
   book: {
@@ -254,7 +257,7 @@ export const principal = {
     subtitle: 'Power of Peer Coaching',
     coAuthor: 'Pravin Khandelwal',
     description: 'Co-authored with Pravin Khandelwal and inspired by the principles of the Art of Living.',
-    cover: '/press/riser-within-me.jpg',
+    cover: asset('/press/riser-within-me.jpg'),
     url: undefined as string | undefined,
   },
   // Add podcast episodes here as they're shared; the section appears automatically.
@@ -264,14 +267,14 @@ export const principal = {
       outlet: 'Times of India · Delhi Times',
       title: 'Creating thoughtful, original spaces',
       date: '1 June 2017',
-      image: '/press/delhi-times-2017.jpg',
+      image: asset('/press/delhi-times-2017.jpg'),
     },
     { outlet: 'Forbes India', title: 'Featured in Forbes India', date: '' },
     {
       outlet: 'Marmo Solutions',
       title: 'Architectural Innovation — featured panel, New Delhi',
       date: '19 October 2024',
-      image: '/press/architectural-innovation.jpg',
+      image: asset('/press/architectural-innovation.jpg'),
     },
   ] as MediaLink[],
 }
