@@ -3,6 +3,57 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { contact, studio, telHref } from './content'
 import type { Project } from './content'
 
+const INTRO_KEY = 'srijan-intro-seen'
+const INTRO_MS = 3800
+
+function shouldPlayIntro() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+  try {
+    return sessionStorage.getItem(INTRO_KEY) === null
+  } catch {
+    return true
+  }
+}
+
+/**
+ * Opening animation: the Studio Srijan mark spins in the centre, then the
+ * screen splits open to reveal the page. Plays once per visit; any click or
+ * key skips it.
+ */
+// Decided once per page load, so re-mounting (e.g. React's dev double-mount) can't skip it.
+const PLAY_INTRO = shouldPlayIntro()
+
+function Intro() {
+  const [visible, setVisible] = useState(PLAY_INTRO)
+
+  useEffect(() => {
+    if (!visible) return
+    try {
+      sessionStorage.setItem(INTRO_KEY, '1')
+    } catch {
+      // Storage unavailable: it will simply play again next time.
+    }
+    const close = () => setVisible(false)
+    const timer = window.setTimeout(close, INTRO_MS)
+    window.addEventListener('keydown', close)
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('keydown', close)
+      document.documentElement.style.overflow = ''
+    }
+  }, [visible])
+
+  if (!visible) return null
+  return (
+    <div className="splash" aria-hidden="true" onClick={() => setVisible(false)}>
+      <div className="splash__door splash__door--top" />
+      <div className="splash__door splash__door--bottom" />
+      <img className="splash__mark" src="/brand/mark-black.png" alt="" />
+    </div>
+  )
+}
+
 /** Image slot that shows a labelled neutral panel until a real photo is added. */
 export function Photo({ src, alt, label = 'Photo', className = '' }: { src?: string; alt: string; label?: string; className?: string }) {
   if (src) return <img className={`photo ${className}`} src={src} alt={alt} loading="lazy" />
@@ -180,6 +231,7 @@ export function Layout() {
 
   return (
     <>
+      <Intro />
       <a className="skip" href="#main">
         Skip to content
       </a>
