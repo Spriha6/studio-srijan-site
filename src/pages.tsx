@@ -256,7 +256,6 @@ function Approach() {
         Our vision
       </p>
       <p className="approach__mission">{vision.headline}</p>
-      <p className="lead approach__vision-text">{vision.text}</p>
 
       <div className="approach__grid">
         <div>
@@ -268,7 +267,6 @@ function Approach() {
             <li key={value.name}>
               <h3>{value.name}</h3>
               <p className="values__source">{value.source}</p>
-              <p>{value.text}</p>
             </li>
           ))}
         </ul>

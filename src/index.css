@@ -303,16 +303,16 @@ textarea {
 .header__nav a {
   position: relative;
   padding: 6px 0;
-  color: var(--muted);
-  transition: color 0.2s;
+  color: var(--brand);
+  transition: opacity 0.2s;
 }
 
 .header__nav a:hover {
-  color: var(--ink);
+  opacity: 0.7;
 }
 
 .header__nav a.active {
-  color: var(--brand);
+  font-weight: 500;
 }
 
 .header__nav a.active::after {
@@ -330,6 +330,7 @@ textarea {
   padding: 8px 0;
   border: 0;
   background: none;
+  color: var(--brand);
   font-size: 14px;
   letter-spacing: 0.04em;
   cursor: pointer;

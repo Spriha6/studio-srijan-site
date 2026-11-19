@@ -47,7 +47,7 @@ function Intro() {
   if (!visible) return null
   return (
     <div className="splash" aria-hidden="true" onClick={() => setVisible(false)}>
-      <img className="splash__mark" src={asset('/brand/mark-black.png')} alt="" />
+      <img className="splash__mark" src={asset('/brand/mark-purple.png')} alt="" />
     </div>
   )
 }
@@ -198,7 +198,7 @@ function Header() {
     <header className={`header${open ? ' is-open' : ''}`}>
       <div className="wrap header__inner">
         <Link to="/" className="header__logo" aria-label={`${studio.name} — home`} onClick={() => setOpen(false)}>
-          <img src={asset('/brand/logo-black.png')} alt="" width="180" height="29" />
+          <img src={asset('/brand/logo-purple.png')} alt="" width="180" height="29" />
         </Link>
         <button
           type="button"
