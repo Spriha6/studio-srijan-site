@@ -1,0 +1,6 @@
+# For studiosrijan.com once the new site launches.
+# (The GitHub Pages preview stays out of search results via the noindex tag in index.html.)
+User-agent: *
+Allow: /
+
+Sitemap: https://www.studiosrijan.com/sitemap.xml

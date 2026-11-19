@@ -24,13 +24,22 @@ export interface Project {
   location: string
   /** e.g. "Upcoming". Omit for completed work. */
   status?: string
+  /** Completion year, once confirmed by the studio. TODO(owner): add years. */
+  year?: string
   summary: string
   /** Paths under /public; the first image is the cover. */
   images: string[]
 }
 
+/** The official domain, used for canonical URLs, the sitemap and social previews. */
+export const SITE_URL = 'https://www.studiosrijan.com'
+
 export const studio = {
   name: 'Studio Srijan',
+  // Hero statement and description (from the 2026 website brief).
+  statement: ['Spaces shaped by vision.', 'Built on experience.'],
+  description:
+    'A multidisciplinary architecture and design practice creating thoughtful spaces through experience, technical expertise and collaborative design.',
   tagline: 'Designing Lifestyle, Building Trust',
   descriptor: 'Architects, Designers and Engineers',
   intro:
@@ -85,7 +94,7 @@ export const values = [
 ]
 
 // Disciplines named on studiosrijan.com; descriptions follow the company profile.
-export const services: { name: Discipline; description: string }[] = [
+export const services: { name: Discipline; label?: string; description: string }[] = [
   {
     name: 'Architecture',
     description: 'From luxury residences and farmhouses to large-scale residential and commercial developments.',
@@ -96,6 +105,7 @@ export const services: { name: Discipline; description: string }[] = [
   },
   {
     name: 'Management',
+    label: 'Project Management',
     description: 'Design consultancy and construction management that keep scope, budget and schedule under control.',
   },
 ]
@@ -204,6 +214,12 @@ export const contact = {
   hours: 'Monday – Saturday, 09:30 – 18:30',
   phones: ['011-45520647', '+91 92059 23170', '+91 72899 41937'],
   email: 'dgm.studiosrijan@gmail.com',
+  /**
+   * WhatsApp number in international format, digits only (e.g. '919205923170').
+   * TODO(owner): confirm which number the studio uses on WhatsApp. The WhatsApp
+   * buttons stay hidden until this is set.
+   */
+  whatsapp: '' as string,
   social: [
     { label: 'Instagram', url: 'https://www.instagram.com/studiosrijan/' },
     { label: 'LinkedIn', url: 'https://www.linkedin.com/company/studio-srijan/' },
@@ -211,6 +227,55 @@ export const contact = {
     { label: 'X / Twitter', url: 'https://twitter.com/studiosrijan' },
   ],
 }
+
+// TODO(owner): confirm Facebook and X / Twitter are still active; remove any that aren't.
+
+/** WhatsApp chat link with an optional pre-filled message, or undefined until a number is set. */
+export const whatsappHref = (text = 'Hello Studio Srijan, I would like to discuss a project.') =>
+  contact.whatsapp ? `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(text)}` : undefined
+
+// ---------------------------------------------------------------------------
+// Enquiries
+// ---------------------------------------------------------------------------
+
+/**
+ * Where the contact form sends enquiries.
+ *
+ * The live studiosrijan.com form is handled by Hostinger Website Builder, which
+ * this site can't use. Until a form service is set up, the form opens the
+ * visitor's email app with the enquiry written out (nothing is sent until they
+ * press send there).
+ *
+ * TODO(owner): create a form endpoint on the studio's own account (e.g. Formspree
+ * or Web3Forms) that emails the enquiries to the studio, then paste it here.
+ * Web3Forms also needs its public access key in `accessKey`.
+ */
+export const enquiries = {
+  endpoint: '' as string,
+  accessKey: '' as string,
+}
+
+export const inquiryTypes = [
+  { id: 'project', label: 'New project' },
+  { id: 'vendor', label: 'Vendor / supplier' },
+  { id: 'collaboration', label: 'Collaboration' },
+  { id: 'other', label: 'Other' },
+] as const
+
+export type InquiryType = (typeof inquiryTypes)[number]['id']
+
+export const projectCategories = ['Residence', 'Farmhouse', 'Residential complex', 'Commercial', 'Interiors', 'Other']
+
+export const vendorCategories = [
+  'Building materials',
+  'Furniture & furnishings',
+  'Lighting & electrical',
+  'Fixtures & fittings',
+  'Manufacturing',
+  'Contracting',
+  'Consultancy / professional services',
+  'Other',
+]
 
 /** Indian numbers as tel: links: "011-45520647" → tel:+911145520647, "+91 92059 23170" → tel:+919205923170. */
 export const telHref = (phone: string) => {

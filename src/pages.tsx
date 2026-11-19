@@ -1,12 +1,17 @@
-import { useState } from 'react'
-import type { FormEvent } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { HeroSlides, Photo, ProjectCard, Slideshow } from './components'
-import { contact, disciplineSlug, mission, principal, projects, services, studio, telHref, values, vision } from './content'
-import type { Discipline, MediaLink } from './content'
+import { usePageMeta } from './seo'
+import { contact, mission, principal, projects, services, studio, telHref, values, vision, whatsappHref } from './content'
+import type { Category, MediaLink } from './content'
+
+export { Contact } from './contact'
 
 export function Home() {
-  const [first, second] = studio.tagline.split(', ')
+  usePageMeta({
+    description:
+      'Studio Srijan is a New Delhi practice of architects, designers and engineers. Since 1996: architecture, interior design and project management for homes, farmhouses and developments across India.',
+    path: '/',
+  })
   return (
     <>
       <section className="hero">
@@ -15,37 +20,43 @@ export function Home() {
           <p className="label">
             {studio.descriptor} · Est. {studio.founded} · New Delhi
           </p>
-          <h1 className="display">
-            {first}
+          <h1 className="display hero__title">
+            {studio.statement[0]}
             <br />
-            {second}
+            {studio.statement[1]}
           </h1>
-          <Link to="/contact" className="button hero__cta">
-            Talk to us
-          </Link>
+          <p className="hero__description">{studio.description}</p>
+          <div className="hero__actions">
+            <Link to="/projects" className="button">
+              Explore projects
+            </Link>
+            <Link to="/contact?type=project" className="button button--outline">
+              Start a project
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="wrap section intro">
-        <p className="lead">{studio.intro}</p>
+        <div>
+          <p className="label">The studio</p>
+          <p className="lead">{studio.intro}</p>
+          <Link to="/about" className="arrow-link intro__link">
+            About the studio
+          </Link>
+        </div>
         <Stats />
-      </section>
-
-      <Approach />
-
-      <section className="wrap section">
-        <PrincipalFeature />
       </section>
 
       <section className="wrap section">
         <div className="section__head">
-          <h2 className="heading">Selected work</h2>
+          <h2 className="heading">Selected projects</h2>
           <Link to="/projects" className="arrow-link">
             All projects
           </Link>
         </div>
         <div className="project-grid">
-          {projects.slice(0, 4).map((project, index) => (
+          {projects.slice(0, 6).map((project, index) => (
             <ProjectCard key={project.slug} project={project} index={index} />
           ))}
         </div>
@@ -55,6 +66,20 @@ export function Home() {
         <h2 className="heading">What we do</h2>
         <Services />
         <p className="muted services__note">{studio.technology}</p>
+      </section>
+
+      <Approach />
+
+      <section className="wrap section">
+        <PrincipalFeature />
+        <Link to="/team" className="team-teaser">
+          <Photo src={studio.team.photo} alt="The Studio Srijan team outside the studio" />
+          <span className="team-teaser__text">
+            <span className="label">The team</span>
+            <span className="heading">{studio.stats[1].value} architects, designers and project managers</span>
+            <span className="arrow-link">Meet the team</span>
+          </span>
+        </Link>
       </section>
 
       <TalkToUs />
@@ -75,34 +100,40 @@ function Stats({ column = false }: { column?: boolean }) {
   )
 }
 
-/** Disciplines; each row links to its tab on the Projects page. */
+/** The studio's disciplines. */
 function Services() {
   return (
     <ol className="services">
       {services.map((service, index) => (
-        <li key={service.name}>
-          <Link to={`/projects?discipline=${disciplineSlug(service.name)}`} className="services__row">
-            <span className="services__num">{String(index + 1).padStart(2, '0')}</span>
-            <h3>{service.name}</h3>
-            <p>{service.description}</p>
-            <span className="services__cta">View projects</span>
-          </Link>
+        <li key={service.name} className="services__row">
+          <span className="services__num">{String(index + 1).padStart(2, '0')}</span>
+          <h3>{service.label ?? service.name}</h3>
+          <p>{service.description}</p>
         </li>
       ))}
     </ol>
   )
 }
 
-const FILTERS: ('All' | Discipline)[] = ['All', 'Architecture', 'Interior Design', 'Management']
+/** Filters come from the categories the projects actually have. */
+const CATEGORIES = [...new Set(projects.map((project) => project.category))]
+const categorySlug = (category: Category) => category.toLowerCase().replace(/\s+/g, '-')
 
 export function Projects() {
-  // The selected tab lives in the URL (?discipline=architecture) so other pages can link straight to it.
+  // The selected filter lives in the URL (?type=farmhouses) so it can be linked to and shared.
   const [params, setParams] = useSearchParams()
-  const filter = FILTERS.find((item) => item !== 'All' && disciplineSlug(item) === params.get('discipline')) ?? 'All'
-  const shown = projects.filter((project) => filter === 'All' || project.discipline === filter)
+  const filter = CATEGORIES.find((category) => categorySlug(category) === params.get('type')) ?? 'All'
+  const shown = projects.filter((project) => filter === 'All' || project.category === filter)
 
-  function choose(item: (typeof FILTERS)[number]) {
-    setParams(item === 'All' ? {} : { discipline: disciplineSlug(item) }, { replace: true })
+  usePageMeta({
+    title: 'Projects',
+    description:
+      'Residences, farmhouses and residential developments by Studio Srijan across New Delhi, Gurugram, Noida, Varanasi, Mathura and Coimbatore.',
+    path: '/projects',
+  })
+
+  function choose(item: 'All' | Category) {
+    setParams(item === 'All' ? {} : { type: categorySlug(item) }, { replace: true })
   }
 
   return (
@@ -113,10 +144,11 @@ export function Projects() {
         <p className="lead page__lead">{studio.residentialIntro}</p>
       </header>
 
-      <div className="filters" role="group" aria-label="Filter projects by discipline">
-        {FILTERS.map((item) => (
+      <div className="filters" role="group" aria-label="Filter projects by type">
+        {(['All', ...CATEGORIES] as const).map((item) => (
           <button key={item} type="button" aria-pressed={filter === item} onClick={() => choose(item)}>
             {item}
+            <span className="filters__count">{item === 'All' ? projects.length : projects.filter((p) => p.category === item).length}</span>
           </button>
         ))}
       </div>
@@ -142,50 +174,75 @@ export function Projects() {
 export function ProjectDetail() {
   const { slug } = useParams()
   const index = projects.findIndex((project) => project.slug === slug)
-  const project = projects[index]
+  const project = projects[index] as (typeof projects)[number] | undefined
+  usePageMeta({
+    title: project ? `${project.title}, ${project.location}` : 'Project not found',
+    description: project?.summary ?? 'This project could not be found.',
+    path: project ? `/projects/${project.slug}` : '/projects',
+    image: project?.images[0],
+  })
   if (!project) return <NotFound />
+  const previous = projects[(index - 1 + projects.length) % projects.length]
   const next = projects[(index + 1) % projects.length]
 
   return (
-    <article className="page">
-      <div className="wrap">
-        <Link to="/projects" className="back-link">
-          All projects
-        </Link>
-        <header className="detail__head">
-          <h1 className="display display--sm">{project.title}</h1>
-          <dl className="detail__facts">
-            <div>
-              <dt>Type</dt>
-              <dd>{project.category}</dd>
-            </div>
-            <div>
-              <dt>Location</dt>
-              <dd>{project.location}</dd>
-            </div>
-            <div>
-              <dt>Status</dt>
-              <dd>{project.status ?? 'Completed'}</dd>
-            </div>
-          </dl>
-        </header>
-      </div>
+    <>
+      <article className="page">
+        <div className="wrap">
+          <Link to="/projects" className="back-link">
+            All projects
+          </Link>
+          <header className="detail__head">
+            <h1 className="display display--sm">{project.title}</h1>
+            <dl className="detail__facts">
+              <div>
+                <dt>Type</dt>
+                <dd>{project.category}</dd>
+              </div>
+              <div>
+                <dt>Location</dt>
+                <dd>{project.location}</dd>
+              </div>
+              <div>
+                <dt>Scope</dt>
+                <dd>{project.discipline}</dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd>{project.status ?? (project.year ? `Completed ${project.year}` : 'Completed')}</dd>
+              </div>
+            </dl>
+          </header>
+        </div>
 
-      <Slideshow key={project.slug} images={project.images} alt={project.title} />
+        <Slideshow key={project.slug} images={project.images} alt={`${project.title}, ${project.location}`} />
 
-      <div className="wrap">
-        <p className="lead detail__summary">{project.summary}</p>
+        <div className="wrap">
+          <p className="lead detail__summary">{project.summary}</p>
 
-        <Link to={`/projects/${next.slug}`} className="next-project">
-          <span className="label">Next project</span>
-          <span className="heading">{next.title}</span>
-        </Link>
-      </div>
-    </article>
+          <nav className="project-nav" aria-label="More projects">
+            <Link to={`/projects/${previous.slug}`} className="project-nav__link">
+              <span className="label">← Previous</span>
+              <span className="heading">{previous.title}</span>
+            </Link>
+            <Link to={`/projects/${next.slug}`} className="project-nav__link project-nav__link--next">
+              <span className="label">Next →</span>
+              <span className="heading">{next.title}</span>
+            </Link>
+          </nav>
+        </div>
+      </article>
+      <ContactBand title="Planning something similar?" />
+    </>
   )
 }
 
 export function About() {
+  usePageMeta({
+    title: 'About',
+    description: `${studio.about.slice(0, 150)}…`,
+    path: '/about',
+  })
   return (
     <>
       <section className="wrap page">
@@ -232,6 +289,11 @@ export function About() {
 }
 
 export function Team() {
+  usePageMeta({
+    title: 'Team',
+    description: 'Meet the architects, designers and project managers of Studio Srijan, led by Principal Architect Gavish Sahni.',
+    path: '/team',
+  })
   return (
     <>
       <section className="wrap page">
@@ -318,6 +380,12 @@ function Approach() {
 
 export function PrincipalArchitect() {
   const { book } = principal
+  usePageMeta({
+    title: `${principal.name}, ${principal.role}`,
+    description: `${principal.bio} Awards, press and the book ${book.title}.`,
+    path: '/principal-architect',
+    image: principal.portrait,
+  })
   const sections = [
     principal.videos.length > 0 && ['videos', 'Videos'],
     ['awards', 'Awards'],
@@ -469,6 +537,11 @@ function MediaList({ items, action }: { items: MediaLink[]; action: string }) {
 }
 
 export function Location() {
+  usePageMeta({
+    title: 'Location',
+    description: `Visit Studio Srijan at ${contact.address.join(', ')}. ${contact.hours}.`,
+    path: '/location',
+  })
   return (
     <>
       <section className="wrap page">
@@ -527,89 +600,6 @@ export function Location() {
   )
 }
 
-export function Contact() {
-  const [sent, setSent] = useState(false)
-
-  // No server: compose the enquiry in the visitor's own email app.
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    const subject = `Project enquiry from ${data.get('name')}`
-    const body = `${data.get('message')}\n\n${data.get('name')}\n${data.get('email')}${data.get('phone') ? `\n${data.get('phone')}` : ''}`
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent(true)
-  }
-
-  return (
-    <section className="wrap page">
-      <header className="page__head">
-        <p className="label">Contact</p>
-        <h1 className="display display--sm">Tell us about your project.</h1>
-      </header>
-
-      <div className="contact">
-        <form className="form" onSubmit={submit}>
-          <label>
-            <span>Name</span>
-            <input name="name" required autoComplete="name" />
-          </label>
-          <label>
-            <span>Email</span>
-            <input name="email" type="email" required autoComplete="email" />
-          </label>
-          <label>
-            <span>Phone (optional)</span>
-            <input name="phone" type="tel" autoComplete="tel" />
-          </label>
-          <label>
-            <span>Message</span>
-            <textarea name="message" rows={6} required />
-          </label>
-          <button type="submit" className="button">
-            Send enquiry
-          </button>
-          {sent && (
-            <p className="form__note" role="status">
-              Your email app should open with the message ready to send. If it doesn’t, write to us at{' '}
-              <a href={`mailto:${contact.email}`}>{contact.email}</a>.
-            </p>
-          )}
-        </form>
-
-        <div className="contact__details">
-          <div>
-            <p className="label">Office</p>
-            <address>
-              {contact.address.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </address>
-            <Link to="/location" className="arrow-link">
-              Map &amp; directions
-            </Link>
-          </div>
-          <div>
-            <p className="label">Hours</p>
-            <p>{contact.hours}</p>
-          </div>
-          <div>
-            <p className="label">Phone</p>
-            {contact.phones.map((phone) => (
-              <a key={phone} href={telHref(phone)}>
-                {phone}
-              </a>
-            ))}
-          </div>
-          <div>
-            <p className="label">Email</p>
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
 /** Home page contact section with direct ways to reach the studio. */
 function TalkToUs() {
   const [phone] = contact.phones
@@ -624,15 +614,26 @@ function TalkToUs() {
           <p className="talk__text">
             Tell us about your home, workplace or interior. We’ll get back to you to talk it through.
           </p>
-          <Link to="/contact" className="button button--light">
-            Send an enquiry
+          <Link to="/contact?type=project" className="button button--light">
+            Start a project
           </Link>
+          <p className="talk__vendor">
+            Vendor, supplier or consultant? <Link to="/contact?type=vendor">Introduce your company →</Link>
+          </p>
         </div>
         <ul className="talk__ways">
           <li>
             <span className="talk__way-label">Call</span>
             <a href={telHref(phone)}>{phone}</a>
           </li>
+          {whatsappHref() && (
+            <li>
+              <span className="talk__way-label">WhatsApp</span>
+              <a href={whatsappHref()} target="_blank" rel="noreferrer">
+                Message us →
+              </a>
+            </li>
+          )}
           <li>
             <span className="talk__way-label">Email</span>
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
@@ -651,12 +652,12 @@ function TalkToUs() {
   )
 }
 
-function ContactBand() {
+function ContactBand({ title = 'Have a project in mind?' }: { title?: string }) {
   return (
     <section className="band">
       <div className="wrap band__inner">
-        <h2 className="display display--sm">Have a project in mind?</h2>
-        <Link to="/contact" className="button button--light">
+        <h2 className="display display--sm">{title}</h2>
+        <Link to="/contact?type=project" className="button button--light">
           Start a conversation
         </Link>
       </div>
@@ -665,6 +666,7 @@ function ContactBand() {
 }
 
 export function NotFound() {
+  usePageMeta({ title: 'Page not found', description: 'This page doesn’t exist.', path: '/' })
   return (
     <section className="wrap page">
       <p className="label">404</p>
