@@ -1053,6 +1053,16 @@ a.media-list__row:hover .media-list__title {
   margin-top: 48px;
 }
 
+.team-photo--top {
+  margin-top: 0;
+}
+
+.about__intro {
+  max-width: 52ch;
+  margin-top: 24px;
+  color: var(--muted);
+}
+
 .team-photo .photo {
   aspect-ratio: 2 / 1;
 }

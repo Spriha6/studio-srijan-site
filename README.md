@@ -17,4 +17,4 @@ Everything the studio says lives in **`src/content.ts`**; no layout code needs t
 - **Principal Architect:** awards, the book and press live under `principal`. Add YouTube videos to `videos` or podcast episodes to `podcasts` and those sections appear automatically.
 - **Team, story, vision, mission and values:** under `studio`, `vision`, `mission` and `values`.
 
-Pages: Home, Projects (filter by type), Project detail (photo slideshow), Team, Principal Architect, Location (map + directions), Contact. The contact form opens the visitor's email app addressed to the studio; there's no server. A short logo animation plays once per visit.
+Pages: Home, Projects (filter by type), Project detail (photo slideshow), About Us, Team, Principal Architect (linked from the Gavish Sahni feature), Location (map + directions), Contact. The contact form opens the visitor's email app addressed to the studio; there's no server. A short logo animation plays once per visit.

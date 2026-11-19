@@ -164,31 +164,24 @@ export function ProjectDetail() {
   )
 }
 
-export function Team() {
+export function About() {
   return (
     <>
       <section className="wrap page">
         <header className="page__head">
-          <p className="label">Team</p>
-          <h1 className="display display--sm">From a team of two to a studio of fifty.</h1>
+          <p className="label">About us</p>
+          <h1 className="display display--sm">{studio.tagline}</h1>
         </header>
         <div className="studio__intro">
-          <p className="lead">{studio.about}</p>
+          <div>
+            <p className="lead">{studio.about}</p>
+            <p className="about__intro">{studio.intro}</p>
+          </div>
           <Stats column />
         </div>
       </section>
 
-      <section className="wrap section">
-        <PrincipalFeature />
-      </section>
-
-      <section className="wrap section">
-        <h2 className="heading">Meet our team</h2>
-        <figure className="team-photo">
-          <Photo src={studio.team.photo} alt="The Studio Srijan team outside the studio" />
-          <figcaption className="lead">{studio.team.text}</figcaption>
-        </figure>
-      </section>
+      <Approach />
 
       <section className="wrap section">
         <h2 className="heading">How we grew</h2>
@@ -203,9 +196,36 @@ export function Team() {
       </section>
 
       <section className="wrap section">
-        <h2 className="heading">Disciplines</h2>
+        <h2 className="heading">What we do</h2>
         <Services />
         <p className="muted services__note">{studio.technology}</p>
+      </section>
+
+      <section className="wrap section">
+        <PrincipalFeature />
+      </section>
+
+      <ContactBand />
+    </>
+  )
+}
+
+export function Team() {
+  return (
+    <>
+      <section className="wrap page">
+        <header className="page__head">
+          <p className="label">Team</p>
+          <h1 className="display display--sm">From a team of two to a studio of fifty.</h1>
+        </header>
+        <figure className="team-photo team-photo--top">
+          <Photo src={studio.team.photo} alt="The Studio Srijan team outside the studio" />
+          <figcaption className="lead">{studio.team.text}</figcaption>
+        </figure>
+      </section>
+
+      <section className="wrap section">
+        <PrincipalFeature />
       </section>
 
       <ContactBand />
