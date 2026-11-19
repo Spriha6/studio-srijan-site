@@ -20,6 +20,9 @@ export function Home() {
             <br />
             {second}
           </h1>
+          <Link to="/contact" className="button hero__cta">
+            Talk to us
+          </Link>
         </div>
       </section>
 
@@ -54,7 +57,7 @@ export function Home() {
         <p className="muted services__note">{studio.technology}</p>
       </section>
 
-      <ContactBand />
+      <TalkToUs />
     </>
   )
 }
@@ -602,6 +605,47 @@ export function Contact() {
             <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </div>
         </div>
+      </div>
+    </section>
+  )
+}
+
+/** Home page contact section with direct ways to reach the studio. */
+function TalkToUs() {
+  const [phone] = contact.phones
+  return (
+    <section className="band talk" aria-labelledby="talk-title">
+      <div className="wrap talk__inner">
+        <div>
+          <p className="label talk__label">Talk to us</p>
+          <h2 id="talk-title" className="display display--sm">
+            Have a project in mind?
+          </h2>
+          <p className="talk__text">
+            Tell us about your home, workplace or interior. We’ll get back to you to talk it through.
+          </p>
+          <Link to="/contact" className="button button--light">
+            Send an enquiry
+          </Link>
+        </div>
+        <ul className="talk__ways">
+          <li>
+            <span className="talk__way-label">Call</span>
+            <a href={telHref(phone)}>{phone}</a>
+          </li>
+          <li>
+            <span className="talk__way-label">Email</span>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </li>
+          <li>
+            <span className="talk__way-label">Visit</span>
+            <Link to="/location">Kirti Nagar, New Delhi →</Link>
+          </li>
+          <li>
+            <span className="talk__way-label">Hours</span>
+            <span>{contact.hours}</span>
+          </li>
+        </ul>
       </div>
     </section>
   )

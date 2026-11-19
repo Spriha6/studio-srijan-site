@@ -657,6 +657,67 @@ textarea {
   color: var(--muted);
 }
 
+.hero__cta {
+  margin-top: 32px;
+}
+
+/* Home "Talk to us" section */
+.talk__inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: end;
+  padding-block: clamp(72px, 10vw, 128px);
+}
+
+.talk__label {
+  color: color-mix(in srgb, var(--brand-ink) 75%, transparent);
+}
+
+.talk__text {
+  max-width: 40ch;
+  margin: 20px 0 32px;
+  color: color-mix(in srgb, var(--brand-ink) 85%, transparent);
+  font-size: 17px;
+}
+
+.talk__ways {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid color-mix(in srgb, var(--brand-ink) 30%, transparent);
+  list-style: none;
+}
+
+.talk__ways li {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--brand-ink) 30%, transparent);
+}
+
+.talk__way-label {
+  color: color-mix(in srgb, var(--brand-ink) 70%, transparent);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.talk__ways a {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 300;
+  overflow-wrap: anywhere;
+}
+
+.talk__ways a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 /* ---------- Inner pages ---------- */
 
 .page {
@@ -1458,6 +1519,7 @@ main:has(> .band:last-child) + .footer {
     height: 56vh;
   }
 
+  .talk__inner,
   .intro,
   .studio__intro,
   .location,
