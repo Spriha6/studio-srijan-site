@@ -609,6 +609,80 @@ textarea {
 
 /* ---------- Principal Architect ---------- */
 
+.feature {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) 1.2fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+}
+
+.feature__portrait .photo {
+  aspect-ratio: 4 / 5;
+  transition: opacity 0.3s;
+}
+
+.feature__portrait:hover .photo {
+  opacity: 0.85;
+}
+
+.feature__body .display {
+  margin-bottom: 36px;
+}
+
+.feature__body > .arrow-link {
+  margin-top: 32px;
+}
+
+.recognition {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.recognition li {
+  border-bottom: 1px solid var(--line);
+}
+
+.recognition li:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+
+.recognition a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  padding: 20px 20px 20px 0;
+}
+
+.recognition li:nth-child(even) a {
+  padding-left: 20px;
+}
+
+.recognition__label {
+  font-family: var(--display);
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 400;
+  transition: color 0.2s;
+}
+
+.recognition li:first-child .recognition__label {
+  color: var(--brand);
+}
+
+.recognition a:hover .recognition__label {
+  color: var(--brand);
+}
+
+.recognition__detail {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+
 .team__link:hover h3 {
   color: var(--brand);
 }
@@ -1013,8 +1087,13 @@ main:has(> .band:last-child) + .footer {
   }
 
   .values,
-  .videos {
+  .videos,
+  .feature {
     grid-template-columns: 1fr;
+  }
+
+  .feature__portrait {
+    max-width: 320px;
   }
 
   .awards li,

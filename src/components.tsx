@@ -110,11 +110,13 @@ function Footer() {
 }
 
 export function Layout() {
-  const { pathname } = useLocation()
-  // Start each page at the top.
+  const { pathname, hash } = useLocation()
+  // Start each page at the top, or at the section a link points to (e.g. #awards).
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
+    const target = hash ? document.getElementById(hash.slice(1)) : null
+    if (target) target.scrollIntoView()
+    else window.scrollTo(0, 0)
+  }, [pathname, hash])
 
   return (
     <>

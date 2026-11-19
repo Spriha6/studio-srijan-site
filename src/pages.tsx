@@ -32,6 +32,10 @@ export function Home() {
       <Approach />
 
       <section className="wrap section">
+        <PrincipalFeature />
+      </section>
+
+      <section className="wrap section">
         <div className="section__head">
           <h2 className="heading">Selected work</h2>
           <Link to="/projects" className="arrow-link">
@@ -168,26 +172,21 @@ export function Team() {
       </section>
 
       <section className="wrap section">
-        <h2 className="heading">People</h2>
+        <PrincipalFeature />
+      </section>
+
+      <section className="wrap section">
+        <h2 className="heading">The team</h2>
         <ul className="team">
-          {team.map((person, index) =>
-            person.name === principal.name ? (
-              <li key={person.name}>
-                <Link to="/principal-architect" className="team__link">
-                  <Photo src={principal.portrait ?? person.photo} alt={person.name} label="Portrait" />
-                  <h3>{person.name}</h3>
-                  <p>{principal.role}</p>
-                  <span className="arrow-link">Read more</span>
-                </Link>
-              </li>
-            ) : (
+          {team
+            .filter((person) => person.name !== principal.name)
+            .map((person, index) => (
               <li key={`${person.name}-${index}`}>
                 <Photo src={person.photo} alt={person.name} label="Portrait" />
                 <h3>{person.name}</h3>
                 <p>{person.role}</p>
               </li>
-            ),
-          )}
+            ))}
         </ul>
       </section>
 
@@ -208,6 +207,43 @@ export function Team() {
 
       <ContactBand />
     </>
+  )
+}
+
+/** Principal Architect feature with a recognition strip; used on Home and Team. */
+function PrincipalFeature({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
+  const Heading = headingLevel === 2 ? 'h2' : 'h3'
+  const [award] = principal.awards
+  const highlights = [
+    { label: award.name, detail: [award.detail, award.year].join(' · '), href: '#awards' },
+    { label: 'Author', detail: principal.book.title, href: '#book' },
+    { label: 'Podcasts', detail: `${principal.podcasts.length} appearances`, href: '#podcasts' },
+    { label: 'In the news', detail: `${principal.press.length} articles`, href: '#press' },
+  ]
+
+  return (
+    <div className="feature">
+      <Link to="/principal-architect" className="feature__portrait" tabIndex={-1} aria-hidden="true">
+        <Photo src={principal.portrait} alt="" label="Portrait" />
+      </Link>
+      <div className="feature__body">
+        <p className="label">Led by our {principal.role}</p>
+        <Heading className="display display--sm">{principal.name}</Heading>
+        <ul className="recognition" aria-label="Recognition">
+          {highlights.map((item) => (
+            <li key={item.label}>
+              <Link to={`/principal-architect${item.href}`}>
+                <span className="recognition__label">{item.label}</span>
+                <span className="recognition__detail">{item.detail}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link to="/principal-architect" className="arrow-link">
+          Meet {principal.name}
+        </Link>
+      </div>
+    </div>
   )
 }
 
