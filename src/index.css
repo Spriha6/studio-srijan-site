@@ -1600,6 +1600,7 @@ main:has(> .band:last-child) + .footer {
 }
 
 .header__nav .header__cta {
+  padding: 0 20px;
   color: var(--brand-ink);
 }
 
@@ -1613,7 +1614,7 @@ main:has(> .band:last-child) + .footer {
 }
 
 .hero__title {
-  max-width: 15ch;
+  max-width: 21ch;
   font-size: clamp(44px, 6.6vw, 100px);
 }
 
