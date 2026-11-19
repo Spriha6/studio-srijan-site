@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { contact, studio, telHref } from './content'
+import { contact, projects, studio, telHref } from './content'
 import type { Project } from './content'
 
 const INTRO_KEY = 'srijan-intro-seen'
@@ -118,6 +118,50 @@ export function Slideshow({ images, alt, count = 3 }: { images: string[]; alt: s
           </p>
         </>
       )}
+    </div>
+  )
+}
+
+const HERO_MS = 5000
+
+/** Home hero: project covers that crossfade on their own, with a caption linking to each project. */
+export function HeroSlides() {
+  const slides = projects.map((project) => ({ src: project.images[0], project }))
+  const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+
+  useEffect(() => {
+    if (paused) return
+    const timer = window.setInterval(() => setIndex((current) => (current + 1) % slides.length), HERO_MS)
+    return () => window.clearInterval(timer)
+  }, [paused, slides.length])
+
+  const current = slides[index].project
+
+  return (
+    <div className="hero-slides" aria-roledescription="carousel" aria-label="Featured projects">
+      {slides.map((slide, i) => (
+        <img
+          key={slide.src}
+          className={`hero-slides__image${i === index ? ' is-active' : ''}`}
+          src={slide.src}
+          alt={i === index ? `${slide.project.title}, ${slide.project.location}` : ''}
+          aria-hidden={i !== index}
+          loading={i === 0 ? 'eager' : 'lazy'}
+        />
+      ))}
+      <Link to={`/projects/${current.slug}`} className="hero-slides__caption" aria-live={paused ? 'polite' : 'off'}>
+        <span>{current.title}</span>
+        <span className="hero-slides__location">{current.location}</span>
+      </Link>
+      <button
+        type="button"
+        className="hero-slides__toggle"
+        onClick={() => setPaused((value) => !value)}
+        aria-label={paused ? 'Play project slideshow' : 'Pause project slideshow'}
+      >
+        <span aria-hidden="true">{paused ? '▶' : '❚❚'}</span>
+      </button>
     </div>
   )
 }

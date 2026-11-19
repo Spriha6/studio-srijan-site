@@ -1,21 +1,25 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Photo, ProjectCard, Slideshow } from './components'
+import { HeroSlides, Photo, ProjectCard, Slideshow } from './components'
 import { contact, mission, principal, projects, services, studio, telHref, values, vision } from './content'
 import type { Category, MediaLink } from './content'
 
 export function Home() {
-  const [featured] = projects
+  const [first, second] = studio.tagline.split(', ')
   return (
     <>
       <section className="hero">
-        <Photo className="hero__image" src={featured.images[0]} alt={`${featured.title}, ${featured.location}`} />
+        <HeroSlides />
         <div className="wrap hero__text">
           <p className="label">
             {studio.descriptor} · Est. {studio.founded} · New Delhi
           </p>
-          <h1 className="display">{studio.tagline}</h1>
+          <h1 className="display">
+            {first}
+            <br />
+            {second}
+          </h1>
         </div>
       </section>
 
